@@ -31,7 +31,7 @@ public:
     }
     
     void gameLog(const std::string& message) {
-        std::cout << "\033[36m[ГРА] " << message << "\033[0m" << std::endl;
+        std::cout << "\033[35m[ГРА] " << message << "\033[0m" << std::endl;
     }
     
 private:

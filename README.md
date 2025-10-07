@@ -3,8 +3,10 @@ A console RPG with turn-based combat and procedural generation elements.
 
 You are the one who survived after fleeing your hometown — a name you’ve forgotten due to trauma. The only things you remember are the name Eirin and the taste of ash on your tongue. The village where you woke up is a border settlement on the edge of the Dark Forest, where scouts from the Flame Guild have recently been disappearing.
 
-Documentations: 
-[Mechanics [EN]](./docs/mechanics_en.md) | [Mechanics [UA]](./docs/mechanics_ua.md)
+
+[Mechanics [EN]](./docs/mechanics_en.md) | [Mechanics [UA]](./docs/mechanics_ua.md) | [Technical details [EN]](./docs/documentation_en.md) | [Technical details [UA]](./docs/documentation_ua.md)
+
+![Preview screenshot](./images/preview.png)
 
 ## Prerequisites
 
@@ -60,3 +62,18 @@ chmod 777 ./tools/run.sh
 - `src/world/`: World code directory
 - `tools/`: Tools directory
 - `docs/`: Documentation directory
+
+## Resources that we using
+
+- [CMake](https://cmake.org/) - For building the project
+- [Doxygen](https://www.doxygen.nl/) - For generating documentation
+- [Git](https://git-scm.com/) - For version control
+- [GitHub](https://github.com/) - For hosting this repository
+- [GitHub Copilot](https://github.com/features/copilot) - For code completion
+- [AnciiArt generator](https://patorjk.com/software/taag/#p=display&f=Graffiti) - For generating ASCII art
+- [ChatGPT](https://chat.openai.com/) - For generating documentation, minimal/routine code, some refactoring code, some terminal ui solutions code
+- [StackOverflow - How can I convert a std::string to int?](https://stackoverflow.com/questions/7663709/how-can-i-convert-a-stdstring-to-int)
+
+## License
+
+This project is open source and available under the [MIT License](LICENSE).

@@ -6,7 +6,7 @@
 #include <random>
 
 #ifdef _WIN32
-#include <windows.h>
+    #include <windows.h>
 #endif
 
 void Utils::setRawMode(bool enable) {

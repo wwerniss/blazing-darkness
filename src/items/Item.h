@@ -3,19 +3,18 @@
 #include <string>
 #include <memory>
 
-// Forward declaration
 class Character;
 
-// Base Item class
 class Item {
 protected:
     std::string name;
     std::string description;
+    std::string usageMessage;
     int value;
     
 public:
-    Item(const std::string& n, const std::string& desc, int val) 
-        : name(n), description(desc), value(val) {}
+    Item(const std::string& n, const std::string& desc, const std::string& usage, int val) 
+        : name(n), description(desc), usageMessage(usage), value(val) {}
         
     virtual ~Item() = default;
     
@@ -24,5 +23,6 @@ public:
     
     std::string getName() const { return name; }
     std::string getDescription() const { return description; }
+    std::string getUsageMessage() const { return usageMessage; }
     int getValue() const { return value; }
 };

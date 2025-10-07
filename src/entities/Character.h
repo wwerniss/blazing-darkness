@@ -37,6 +37,8 @@ public:
     int getMaxHealth() const;
     int getAttack() const;
     int getDefense() const;
+    const std::vector<std::shared_ptr<Item>>& getInventory() const { return inventory; }
+    std::vector<std::shared_ptr<Item>>& getInventory() { return inventory; }
     
     virtual std::string getClassName() const = 0;
 };

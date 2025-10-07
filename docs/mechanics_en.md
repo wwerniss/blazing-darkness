@@ -10,6 +10,8 @@ You are the one who survived after fleeing your hometown — a name you’ve for
 - Navigation – [L] and [R]: Move the character through the area.
 Help and Exit – [H]: Displays the help menu; [Q] ends the session.
 
+**Control is carried out only using keys with an English layout!**
+
 ## Combat System
 
 - Damage – simple integers; critical hits are rare and marked as “critical!”.

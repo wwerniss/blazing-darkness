@@ -1,7 +1,7 @@
 #include "Game.h"
 #include <unistd.h> // for usleep
 
-Game::Game() : isRunning(false) {}
+Game::Game() : isRunning(false), hasSlept(false) {}
 
 void Game::clearScreen() {
     #ifdef _WIN32
@@ -22,15 +22,17 @@ void Game::showTitle() {
 
 void Game::showHelp() {
     std::cout << "\n=== Команди ===\n"
-              << "[S]how status\n"
-              << "[E]xplore location\n"
-              << "[F]ight enemies\n"
-              << "[I]nventory\n"
-              << "[L]eft - Move to the left location\n"
-              << "[R]ight - Move to the right location\n"
-              << "[V]illage - Return to the village\n"
-              << "[Q]uit game\n"
-              << "[H]elp - Show this help\n" << std::endl;
+    << "[S]тaтус - Показати стан персонажа\n"
+    << "[E]ксплоруй - Дослідити локацію\n"
+    << "[F]айт - Битися з ворогами\n"
+    << "[I]нвентар - Відкрити інвентар\n"
+    << "[L]іворуч - Перейти в локацію ліворуч\n"
+    << "[R]праворуч - Перейти в локацію праворуч\n"
+    << "[V]село - Повернутися до села\n"
+    << "[Z]сон - Відпочити у селі (тільки у селі)\n"
+    << "[Q]вихід - Вийти з гри\n"
+    << "[H]елп - Показати довідку\n"
+    << std::endl;
 }
 
 void Game::showGameOver() {
@@ -96,7 +98,7 @@ void Game::handleCombat() {
                 }
             } else if (choice == 'U' || choice == 'u') {
                 // Handle item usage
-                Logger::getInstance().gameLog("Використання предметів ще не реалізовано!");
+                Logger::getInstance().gameLog("Використання предметів під час бою ще не реалізовано!");
                 continue;
             } else if (choice == 'R' || choice == 'r') {
                 if (Utils::chance(70)) {
@@ -135,7 +137,26 @@ void Game::handleCombat() {
 }
 
 void Game::showInventory() {
-    Logger::getInstance().gameLog("Інвентар не реалізовано ще!");
+    auto& inventory = const_cast<std::vector<std::shared_ptr<Item>>&>(player->getInventory());
+    
+    if (inventory.empty()) {
+        Logger::getInstance().gameLog("Ваш інвентар порожній.");
+        return;
+    }
+    
+    Logger::getInstance().gameLog("=== ВАШ ІНВЕНТАР ===");
+    
+    for (size_t i = 0; i < inventory.size(); ++i) {
+        const auto& item = inventory[i];
+        Logger::getInstance().gameLog(
+            "[" + std::to_string(i + 1) + "] " + 
+            item->getName() + " - " + 
+            item->getDescription()
+        );
+    }
+    
+    Logger::getInstance().gameLog("====================");
+    Logger::getInstance().gameLog("Натисніть номер предмету, щоб використати його!");
 }
 
 void Game::run() {
@@ -155,7 +176,7 @@ void Game::run() {
     world = std::make_unique<WorldMap>();
     isRunning = true;
 
-    std::cout << "Гра: [E] - Досліджувати [F] - Розпочати бій [S] - Статус [I] - Інвентар [L] - Ліворуч [R] - Праворуч [H] - Допомога [Q] - Вийти \nБій: [A] - Атакувати [U] - Використати предмет [R] - Втекти" << "\n";
+    std::cout << "Гра: [E] - Досліджувати [F] - Розпочати бій [S] - Статус [I] - Інвентар [L] - Ліворуч [R] - Праворуч [Z] - Спати [H] - Допомога [Q] - Вийти \nБій: [A] - Атакувати [U] - Використати предмет [R] - Втекти" << "\n";
 
     Logger::getInstance().gameLog(playerName + " прокину(вся/лась) в маленькому будинку...");
     Utils::sleep(2000);
@@ -167,7 +188,6 @@ void Game::run() {
     
     Utils::setRawMode(true);
     while (isRunning) {
-        // Show current location
         auto location = world->getCurrentLocation();
         Logger::getInstance().gameLog("Перед вами " + location->getName() + ". " + location->getDescription());
         
@@ -175,13 +195,25 @@ void Game::run() {
             Logger::getInstance().combatLog("Раптом ви почули шелест. Тут є вороги! (Натисніть «F», щоб розпочати бій)");
         }
         
-        // Get single character input
         char input;
         do {
             input = std::tolower(Utils::getCharNonBlock());
         } while (input == -1);
+
+        try {
+            std::string inputString = std::string(1, input);
+            int index = std::atoi(inputString.c_str());
+            if (index >= 1 && index <= 9) {
+                size_t idx = static_cast<size_t>(index - 1);
+                if (idx < player->getInventory().size()) {
+                    player->getInventory()[idx]->use(*player);
+                    Logger::getInstance().gameLog(player->getInventory()[idx]->getUsageMessage());
+                    player->getInventory().erase(player->getInventory().begin() + idx);
+                    continue;
+                }
+            }
+        } catch (const std::invalid_argument& e) { }
         
-        // Process input
         switch (input) {
             case 'e':
                 location->explore(*player);
@@ -201,6 +233,22 @@ void Game::run() {
             case 'r':
                 world->moveRight();
                 break;
+            case 'z':
+                if (world->getCurrentLocation()->getName() == "Село") {
+                    if (hasSlept) {
+                        Logger::getInstance().gameLog("Ви вже відпочали не так давно! Час рухатись далі...");
+                        break;
+                    }
+                    hasSlept = true;
+                    int oldHealth = player->getHealth();
+                    player->heal(player->getMaxHealth() - player->getHealth());
+                    int healed = player->getHealth() - oldHealth;
+                    Logger::getInstance().gameLog("Ви повернулися до будинку та добре виспались. Відновлено " + std::to_string(healed) + " очок здоров'я.");
+                    Utils::sleep(1500);
+                } else {
+                    Logger::getInstance().gameLog("Ви можете відпочити тільки в селі! Час рухатись далі...");
+                }
+                break;
             case 'h':
                 showHelp();
                 break;
@@ -212,10 +260,8 @@ void Game::run() {
                 Logger::getInstance().warning("Невідома команда. Натисніть 'H' для допомоги.");
         }
         
-        // Small delay to prevent high CPU usage
         usleep(100000); // 100ms
     }
     
-    // Clean up
     Utils::setRawMode(false);
 }

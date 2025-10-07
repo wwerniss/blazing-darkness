@@ -1,8 +1,11 @@
 #include "WorldMap.h"
 #include "../entities/Enemy.h"
 #include "../items/HealthPotion.h"
-#include "../items/StrengthPotion.h"
 #include "../common/Logger.h"
+#include <vector>
+#include <algorithm>
+#include <random>
+#include <ctime>
 
 WorldMap::WorldMap() : root(nullptr), currentLocation(nullptr) {
     createWorld();
@@ -19,7 +22,6 @@ LocationNode* WorldMap::getCurrentLocation() const {
 void WorldMap::moveLeft() {
     if (currentLocation && currentLocation->getLeft()) {
         currentLocation = currentLocation->getLeft();
-        // currentLocation->getName()
         Logger::getInstance().gameLog("Ви повернули ліворуч, шукаючи щось. Як думаєте, це була гарна ідея?");
     } else {
         Logger::getInstance().gameLog("Ви спробували піти ліворуч, але натрапили на бездонну прірву. Недовго думаючи, ви вирішили розвернутися.");
@@ -29,7 +31,6 @@ void WorldMap::moveLeft() {
 void WorldMap::moveRight() {
     if (currentLocation && currentLocation->getRight()) {
         currentLocation = currentLocation->getRight();
-        // currentLocation->getName()
         Logger::getInstance().gameLog("Ви повернули праворуч, шукаючи щось. Як думаєте, це була гарна ідея?");
     } else {
         Logger::getInstance().gameLog("Ви спробували піти праворуч, але натрапили на бездонну прірву. Недовго думаючи, ви вирішили розвернутися.");
@@ -52,6 +53,17 @@ void WorldMap::createWorld() {
     mountains->setRight(dungeon);
     dungeon->setLeft(mountains);
     cave->setRight(forest);
+    
+    // Create a vector of all locations
+    std::vector<LocationNode*> locations = {forest, cave, mountains, dungeon, village};
+    
+    // Shuffle the locations to randomize potion distribution
+    std::mt19937 rng(std::time(0));
+    std::shuffle(locations.begin(), locations.end(), rng);
+    
+    for (size_t i = 0; i < 4 && i < locations.size(); ++i) {
+        locations[i]->addItem(std::make_shared<HealthPotion>());
+    }
     
     forest->addEnemy(std::make_shared<Enemy>("Гоблін", 2, 15, 4, 2, 25));
     forest->addEnemy(std::make_shared<Enemy>("Вовк", 1, 10, 3, 1, 15));

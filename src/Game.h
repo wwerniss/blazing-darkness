@@ -12,7 +12,7 @@ private:
     bool isRunning;
     std::unique_ptr<Player> player;
     std::unique_ptr<WorldMap> world;
-    
+    bool hasSlept; // Track if player has already slept
     void clearScreen();
     void showTitle();
     void showHelp();
