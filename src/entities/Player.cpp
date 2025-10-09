@@ -43,6 +43,10 @@ int Player::getExperienceToNextLevel() const {
     return experienceToNextLevel; 
 }
 
+int Player::getAttack() const { 
+    return attack;
+}
+
 int Player::getLevel() const { 
     return level; 
 }

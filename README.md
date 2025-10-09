@@ -8,6 +8,10 @@ You are the one who survived after fleeing your hometown — a name you’ve for
 
 ![Preview screenshot](./images/preview.png)
 
+## Development
+
+- This game was developed using MacOS and CMake
+
 ## Prerequisites
 
 - CMake (version 3.10 or higher)

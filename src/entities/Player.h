@@ -19,6 +19,8 @@ public:
     int getExperience() const;
     int getExperienceToNextLevel() const;
     int getLevel() const;
+
+    int getAttack() const;
     
     std::string getClassName() const override;
 };
