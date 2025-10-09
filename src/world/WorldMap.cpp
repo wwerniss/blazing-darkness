@@ -1,11 +1,15 @@
 #include "WorldMap.h"
 #include "../entities/Enemy.h"
 #include "../items/HealthPotion.h"
+#include "../items/Sword.h"
+#include "../items/Axe.h"
+#include "../items/Stick.h"
 #include "../common/Logger.h"
 #include <vector>
 #include <algorithm>
 #include <random>
 #include <ctime>
+#include <memory>
 
 WorldMap::WorldMap() : root(nullptr), currentLocation(nullptr) {
     createWorld();
@@ -61,8 +65,24 @@ void WorldMap::createWorld() {
     std::mt19937 rng(std::time(0));
     std::shuffle(locations.begin(), locations.end(), rng);
     
+    // Add health potions to random locations
     for (size_t i = 0; i < 4 && i < locations.size(); ++i) {
         locations[i]->addItem(std::make_shared<HealthPotion>());
+    }
+    
+    // Create weapon types
+    std::vector<std::function<std::shared_ptr<Item>()>> weaponGenerators = {
+        []() { return std::make_shared<Sword>(); },
+        []() { return std::make_shared<Axe>(); },
+        []() { return std::make_shared<Stick>(); }
+    };
+    
+    // Shuffle locations again for weapon distribution
+    std::shuffle(locations.begin(), locations.end(), rng);
+    
+    // Add one of each weapon type to random locations
+    for (size_t i = 0; i < weaponGenerators.size() && i < locations.size(); ++i) {
+        locations[i]->addItem(weaponGenerators[i]());
     }
     
     forest->addEnemy(std::make_shared<Enemy>("Гоблін", 2, 15, 4, 2, 25));

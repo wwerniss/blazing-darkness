@@ -136,29 +136,6 @@ void Game::handleCombat() {
     }
 }
 
-void Game::showInventory() {
-    auto& inventory = const_cast<std::vector<std::shared_ptr<Item>>&>(player->getInventory());
-    
-    if (inventory.empty()) {
-        Logger::getInstance().gameLog("Ваш інвентар порожній.");
-        return;
-    }
-    
-    Logger::getInstance().gameLog("=== ВАШ ІНВЕНТАР ===");
-    
-    for (size_t i = 0; i < inventory.size(); ++i) {
-        const auto& item = inventory[i];
-        Logger::getInstance().gameLog(
-            "[" + std::to_string(i + 1) + "] " + 
-            item->getName() + " - " + 
-            item->getDescription()
-        );
-    }
-    
-    Logger::getInstance().gameLog("====================");
-    Logger::getInstance().gameLog("Натисніть номер предмету, щоб використати його!");
-}
-
 void Game::run() {
     clearScreen();
     showTitle();
@@ -176,7 +153,7 @@ void Game::run() {
     world = std::make_unique<WorldMap>();
     isRunning = true;
 
-    std::cout << "Гра: [E] - Досліджувати [F] - Розпочати бій [S] - Статус [I] - Інвентар [L] - Ліворуч [R] - Праворуч [Z] - Спати [H] - Допомога [Q] - Вийти \nБій: [A] - Атакувати [U] - Використати предмет [R] - Втекти" << "\n";
+    std::cout << "Гра: [E] - Досліджувати [F] - Розпочати бій [S] - Статус та інвентар [L] - Ліворуч [R] - Праворуч [Z] - Спати [H] - Допомога [Q] - Вийти \nБій: [A] - Атакувати [U] - Використати предмет [R] - Втекти" << "\n";
 
     Logger::getInstance().gameLog(playerName + " прокину(вся/лась) в маленькому будинку...");
     Utils::sleep(2000);
@@ -223,9 +200,6 @@ void Game::run() {
                 break;
             case 's':
                 player->showStatus();
-                break;
-            case 'i':
-                showInventory();
                 break;
             case 'l':
                 world->moveLeft();
