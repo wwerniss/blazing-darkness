@@ -164,6 +164,21 @@ chmod 777 ./tools/run.sh
 - `getDamage() const` - Gets weapon damage
 - `getType() const` - Returns "weapon" as type
 
+### Inheritance Hierarchy
+
+```
+Item (abstract)
+├── Weapon (abstract)
+│   ├── Sword
+│   ├── Axe
+│   └── Stick
+└── HealthPotion
+
+Character (abstract)
+├── Player
+└── Enemy
+```
+
 ### Codebase Structure Summary
 
 - **Total Classes**: 14
