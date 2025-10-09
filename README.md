@@ -6,7 +6,7 @@ You are the one who survived after fleeing your hometown — a name you’ve for
 
 [Mechanics [EN]](./docs/mechanics_en.md) | [Mechanics [UA]](./docs/mechanics_ua.md) | [Technical details [EN]](./docs/documentation_en.md) | [Technical details [UA]](./docs/documentation_ua.md)
 
-![Preview screenshot](./images/preview.png)
+![Preview screenshot](./images/weapon_update_preview.png)
 
 ## Development
 
