@@ -8,6 +8,18 @@ You are the one who survived after fleeing your hometown — a name you’ve for
 
 ![Preview screenshot](./images/weapon_update_preview.png)
 
+## Objective
+
+Illustrate the core concepts of OOP in practice:
+- classes and encapsulation;
+- inheritance and dynamic polymorphism (virtual methods);
+- static polymorphism (templates);
+- working with graph data structures and algorithms.
+
+**This project is dedicated to laboratory work №1.** 
+
+Option 7 (****) of the first list and option 10 of the second list were used.
+
 ## Development
 
 - This game was developed using MacOS and CMake
