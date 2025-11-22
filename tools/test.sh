@@ -1,26 +1,26 @@
 #!/bin/bash
 
-# Выход при ошибке
+# Exit on error
 set -e
 
-# Очистка и создание директории сборки
-echo "🧹 Очистка директории сборки..."
+# Clean and create build directory
+echo "🧹 Cleaning build directory..."
 rm -rf build
 mkdir -p build
 cd build
 
-# Конфигурация CMake
-echo "⚙️  Конфигурация CMake..."
+# CMake configuration
+echo "⚙️ Configuring CMake..."
 cmake ..
 
-# Сборка проекта
-echo "🔨 Сборка проекта..."
-# Используем sysctl для macOS вместо nproc
+# Build project
+echo "🔨 Building project..."
+# Use sysctl for macOS instead of nproc
 make -j$(sysctl -n hw.ncpu)
 
-# Запуск тестов
-echo "🚀 Запуск тестов..."
-./common_tests
+# Run tests based on the provided argument
+echo "🏃 Running all tests..."
+# ctest --output-on-failure # --verbose
+./unit_tests
 
-echo "✅ Тестирование завершено!"
-ctest --output-on-failure --verbose
+echo "✅ Testing completed!"

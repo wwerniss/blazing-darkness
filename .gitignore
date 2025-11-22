@@ -11,6 +11,9 @@ CTestTestfile.cmake
 _deps
 CMakeUserPresets.json
 .DS_Store
+/build
+/.vscode
+# /docs/doxygen
 
 # CLion
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
